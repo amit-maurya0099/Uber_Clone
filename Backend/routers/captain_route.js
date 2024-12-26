@@ -1,6 +1,7 @@
 const express=require('express');
-const { captainRegister } = require('../controllers/captain_controller');
-const {body}=require("express-validator")
+const { captainRegister, captainLogin, getCapProfile, capLogout } = require('../controllers/captain_controller');
+const {body}=require("express-validator");
+const { isCapAuthenticated } = require('../middlewares/auth_middleware');
 
 
 
@@ -15,8 +16,15 @@ router.route('/register').post([
     body('vehicle.vehicleType').isIn(['car','motorcycle','auto']).withMessage("Invalid car type"),
     body('vehicle.capacity').isInt({min:1}).withMessage("Capacity must be geater than 1")
 
-],captainRegister)
+],captainRegister);
 
+router.route("/login").post([
+    body('email').isEmail().withMessage("Invalid email or password"),
+    body('password').isLength({min:8}).withMessage("Invalid email or password")
+],captainLogin);
+
+router.route("/profile").get(isCapAuthenticated,getCapProfile);
+router.route("/logout").get(isCapAuthenticated,capLogout);
 
 
 
