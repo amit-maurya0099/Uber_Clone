@@ -6,15 +6,17 @@ import Userlogin from './pages/Userlogin'
 import Captainlogin from './pages/Captainlogin'
 import CaptainSignup from './pages/Captainsignup'
 import UserSignup from './pages/Usersignup'
+import Landing from './pages/Landing'
 
 const App = () => {
   return (
    <Routes>
-      <Route path="/" element={<Home/>}></Route>
+      <Route path="/" element={<Landing/>}></Route>
       <Route path="/login" element={<Userlogin/>}></Route>
       <Route path="/signup" element={<UserSignup/>}></Route>
       <Route path="/captain_signup" element={<CaptainSignup/>}></Route>
       <Route path="/captain_login" element={<Captainlogin/>}></Route>
+      <Route path="/home" element={<Home/>}></Route>
 
    </Routes>
   )

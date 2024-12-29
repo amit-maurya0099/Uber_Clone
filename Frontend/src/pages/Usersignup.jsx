@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Lottie from 'react-lottie'
-import registerAnimation from "../Utils/RegisterAnimation.json"
+import registerAnimation from "../Utils/RegisterAnimation.json";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import {UserContext} from "../context/UserContext.jsx"
 
 
 const UserSignup = () => {
@@ -19,22 +22,32 @@ const UserSignup = () => {
     const [password,setPassword]=useState('');
     const [firstname,setFirstname]=useState('');
     const [lastname,setLastName]=useState('');
-    const [userData,setUserData]=useState('');
-    const handleRegister=(e)=>{
-           e.preventDefault();
+    const [contact,setContact]=useState('');
+    
   
-           setUserData({
-              email:email,
-              password:password,
-              firstname:firstname,
-              lastname:lastname
-           })
-           
-          
-           setEmail('');
-           setPassword('');
-           setFirstname('');
-           setLastName('');
+  const navigate=useNavigate();
+   const {user,setUser}=useContext(UserContext);
+
+
+    const handleRegister=async(e)=>{
+        e.preventDefault();
+      const newUser={
+        firstname,lastname,email,password
+      }
+      try {
+       
+        const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`,newUser);
+        if(response.status ==200){
+          toast.success("User Registered Successfully");
+          const data=await response.data;
+          setUser(data);
+          navigate("/home");
+        }
+        } catch (error) {
+          toast.error(error.response.data.message)
+         
+      }
+    
            
           
   
@@ -45,7 +58,7 @@ const UserSignup = () => {
       <Lottie options={defaultOptionRegister} height={500} width={500}/>
       </div>
 
-    <form className=' flex flex-col h-[60%] md:h-[70%] w-[90%] md:w-[23%] bg-slate-300 bg-gradient-to-b to-slate-600 shadow-2xl rounded-3xl text-gray-100' onSubmit={handleRegister}>
+    <form className=' flex flex-col h-[65%] md:h-[70%] w-[90%] md:w-[23%] bg-slate-300 bg-gradient-to-b to-slate-600 shadow-2xl rounded-3xl text-gray-100' onSubmit={handleRegister}>
       <h2 className='text-3xl font-bold text-center mt-4 underline'>User Sign Up</h2>
       <div className='flex flex-col mt-4 mx-6 justify-between gap-2 '>
       <h2 className='text-lg font-semibold'>What is your name?</h2>
@@ -62,7 +75,12 @@ const UserSignup = () => {
       <div className='flex flex-col mt-2 mx-6 justify-between gap-2 '>
       <h2 className='text-lg font-semibold'>Password</h2>
       <input  required placeholder="password" className='border bg-white text-black px-2 rounded-md py-1 text-md'
-      value={password} onChange={(e)=>setPassword(e.target.value)} name="password"></input>
+      value={password} onChange={(e)=>setPassword(e.target.value)} ></input>
+      </div>
+      <div className='flex flex-col mt-2 mx-6 justify-between gap-2 '>
+      <h2 className='text-lg font-semibold'>Phone</h2>
+      <input type='number' placeholder="phone number" className='border bg-white text-black px-2 rounded-md py-1 text-md'
+      value={contact} onChange={(e)=>setContact(e.target.value)} ></input>
       </div>
       <div className='flex flex-col mx-6 justify-between gap-2 mt-6'>
         <button className='py-1 text-lg text-center bg-black rounded-md' type="submit">Register</button>
@@ -72,7 +90,7 @@ const UserSignup = () => {
       <Link to="/login">  <span className='text-blue-300'>Back to login</span></Link>
       </div>
      
-     <div className='flex flex-col mx-6 justify-between gap-2 mt-6'>
+     <div className='flex flex-col mx-6 justify-between gap-2 my-6'>
      <Link to='/captain_signup'> <button className='py-1 text-lg text-center bg-green-300 rounded-md text-black w-full'>SignUp as Captain</button>
       </Link> 
       </div>

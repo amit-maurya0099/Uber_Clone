@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import loginAnimation from "../Utils/LoginAnimation.json"
 import Lottie from 'react-lottie'
+import { UserContext } from '../context/UserContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const Userlogin = () => {
   const defaultOptionLogin={
@@ -12,22 +15,27 @@ const Userlogin = () => {
         preserveAspectRatio:'XMidYMid slice'
     }
 }
-
-
-
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
-  const [userData,setUserData]=useState('');
-  const handleLogin=(e)=>{
+  const {user,setUser}=useContext(UserContext);
+  
+  const handleLogin=async(e)=>{
          e.preventDefault();
+
+         const userData={email,password};
+         try {
+          const response=await axios.post()
+          
+         } catch (error) {
+          
+         }
 
          setUserData({
           email:email,
           password:password
          })
-         setEmail('');
-         setPassword('');
-         console.log(userData);
+    
+         
 
   }
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import Lottie from 'react-lottie';
 import registerAnimation from "../Utils/RegisterAnimation.json"
@@ -16,16 +16,17 @@ const CaptainSignup = () => {
     const [password,setPassword]=useState('');
     const [firstname,setFirstname]=useState('');
     const [lastname,setLastName]=useState('');
-    const [captainData,setcaptainData]=useState('');
+    const [contact,setContact]=useState();
+  
     const handleRegister=(e)=>{
            e.preventDefault();
   
-           setcaptainData({
+           const newCaptain={
               email:email,
               password:password,
               firstname:firstname,
               lastname:lastname
-           })
+           }
            setEmail('');
            setPassword('');
            setFirstname('');
@@ -58,6 +59,11 @@ const CaptainSignup = () => {
       <input  required placeholder="password" className='border bg-white text-black px-2 rounded-md py-1 text-md'
       value={password} onChange={(e)=>setPassword(e.target.value)} name="password"></input>
       </div>
+      <div className='flex flex-col mt-2 mx-6 justify-between gap-2 '>
+      <h2 className='text-lg font-semibold'>Phone</h2>
+      <input type='number' placeholder="phone number" className='border bg-white text-black px-2 rounded-md py-1 text-md'
+      value={contact} onChange={(e)=>setContact(e.target.value)} ></input>
+      </div>
       <div className='flex flex-col mx-6 justify-between gap-2 mt-6'>
         <button className='py-1 text-lg text-center bg-black rounded-md' type="submit">Register</button>
       </div>
@@ -66,7 +72,7 @@ const CaptainSignup = () => {
       <Link to="/captain_login">  <span className='text-blue-300'>Back to login</span></Link>
       </div>
      
-     <div className='flex flex-col mx-6 justify-between gap-2 mt-6'>
+     <div className='flex flex-col mx-6 justify-between gap-2 my-6'>
      <Link to='/signup'> <button className='py-1 text-lg text-center bg-green-300 rounded-md text-black w-full'>SignUp as User</button>
       </Link> 
       </div>
