@@ -17,7 +17,7 @@ const captainSchema=new mongoose.Schema({
         unique:true
 
     },
-    phone:{
+    contact:{
         type:String,
     },
     password:{

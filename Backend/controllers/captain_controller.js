@@ -11,7 +11,7 @@ const  captainRegister=async(req,res,next)=>{
     if(!errors.isEmpty){
         return res.status(400).json({errors:errors.array()})
     }
-    const {firstname,lastname,email,password,vehicle}=req.body;
+    const {firstname,lastname,email,password,vehicle,contact}=req.body;
     
 
     if (!firstname || !email || !password || !vehicle || !vehicle.color || !vehicle.capacity || !vehicle.plate || !vehicle.vehicleType) {
@@ -28,6 +28,7 @@ const  captainRegister=async(req,res,next)=>{
         firstname,
         lastname,
         email,
+        contact,
         password: hashedPassword,
         vehicle: { 
             color: vehicle.color,

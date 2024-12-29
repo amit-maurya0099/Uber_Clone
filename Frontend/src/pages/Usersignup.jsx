@@ -32,7 +32,7 @@ const UserSignup = () => {
     const handleRegister=async(e)=>{
         e.preventDefault();
       const newUser={
-        firstname,lastname,email,password
+        firstname,lastname,email,password,contact
       }
       try {
        
@@ -40,16 +40,14 @@ const UserSignup = () => {
         if(response.status ==200){
           toast.success("User Registered Successfully");
           const data=await response.data;
-          setUser(data);
+          setUser(data.user);
+          localStorage.setItem('token',data.token);
           navigate("/home");
         }
         } catch (error) {
           toast.error(error.response.data.message)
          
-      }
-    
-           
-          
+      } 
   
     }
   return (

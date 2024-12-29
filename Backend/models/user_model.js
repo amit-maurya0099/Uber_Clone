@@ -25,7 +25,7 @@ const userSchema=new mongoose.Schema({
     socketId:{
         type:String
     },
-    phone:{
+    contact:{
         type:Number,
     }
 

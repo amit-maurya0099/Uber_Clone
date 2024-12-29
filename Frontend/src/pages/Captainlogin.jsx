@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import loginAnimation from "../Utils/LoginAnimation.json"
 import Lottie from 'react-lottie'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { UserContext } from '../context/UserContext'
 
 
 const Captainlogin = () => {
@@ -14,20 +17,40 @@ const Captainlogin = () => {
     }
 }
 
-
+   const navigate=useNavigate();
    const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
-    const [captainData,setCaptainData]=useState('');
-    const handleLogin=(e)=>{
+   const {setCaptain}=useContext(UserContext);
+   
+    const handleLogin=async(e)=>{
            e.preventDefault();
-  
-           setCaptainData({
-              email:email,
-              password:password
-           })
-           setEmail('');
-           setPassword('');
-           console.log(captainData);
+          const newCaptain={
+            email,password
+          }
+          if(!email || !password){
+            return toast.error("please fill all the details")
+          }
+          try {
+            const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/login`,newCaptain);
+            if(response.status == 200){
+              toast.success(response.data.message);
+              const data=await response.data;
+              localStorage.setItem('token',data.token);
+               setCaptain(data.user);
+              navigate("/home")
+              
+              
+              
+            }
+            
+          } catch (error) {
+             toast.error(error.response.data.message);
+             
+          }
+         
+
+
+           
   
     }
   return (

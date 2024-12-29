@@ -7,9 +7,9 @@ const register=async(req,res,next)=>{
    
     const errors=validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).json({errors:errors.array()});
+        return res.status(400).json({message:errors.array()[0].msg});
     }
-    const {firstname,lastname, email,password,phone}=req.body;
+    const {firstname,lastname, email,password,contact}=req.body;
     
     
     const hashedPassword= await User.hashPassword(password);
@@ -25,8 +25,7 @@ const register=async(req,res,next)=>{
             lastname,
             email,
             password:hashedPassword,
-            phone
-
+            contact
         })
        
        
@@ -48,16 +47,19 @@ const login=async(req,res)=>{
         return res.status(400).json({errors:errors.array()});
     }
      const {email,password}=req.body;
+     if(!password || !email){
+        return res.status(400).json({message:"Please fill all the details"})
+     }
      try {
 
         const user=await User.findOne({email}).select('+password');
         if(!user){
-            return res.status(401).json("Invalid email or password");
+            return res.status(401).json({message:"User does not exist please register"});
         }
         
      const isPasswordMatched=await user.comparePassword(password);
         if(!isPasswordMatched){
-            return res.status(401).json("Invalid email or password");
+            return res.status(401).json({message:"Invalid email or password"});
         }
         const token=user.generateAuthToken();
         res.cookie('token',token);

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import loginAnimation from "../Utils/LoginAnimation.json"
 import Lottie from 'react-lottie'
 import { UserContext } from '../context/UserContext'
@@ -18,25 +18,30 @@ const Userlogin = () => {
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
   const {user,setUser}=useContext(UserContext);
+  const navigate=useNavigate();
   
   const handleLogin=async(e)=>{
          e.preventDefault();
 
          const userData={email,password};
+         if(!email || !password){
+          return  toast.error('please fill all the details')
+         }
          try {
-          const response=await axios.post()
+          const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`,userData)
+          if(response.status ==200){
+            toast.success("User Logged in successfully");
+            const data=response.data;
+            setUser(data.user);
+            localStorage.setItem('token',data.token)
+            navigate("/home")
+            
+          }
           
          } catch (error) {
-          
-         }
-
-         setUserData({
-          email:email,
-          password:password
-         })
-    
-         
-
+          toast.error(error.response.data.message);
+        
+         }      
   }
   return (
     <div className='h-screen w-full  bg-gradient-to-b from-[#60527a] to-black flex justify-evenly items-center'>
