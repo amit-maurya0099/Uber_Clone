@@ -1,10 +1,11 @@
-import React, { useContext, useState, useSyncExternalStore } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Lottie from 'react-lottie';
 import registerAnimation from "../Utils/RegisterAnimation.json"
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../context/Context';
+import Loader from '../components/Loader';
 
 const CaptainSignup = () => {
   const defaultOptionRegister={
@@ -25,7 +26,7 @@ const CaptainSignup = () => {
     const[vehicleType,setVehicleType]=useState('');
     const[vehiclePlate,setVehiclePlate]=useState('');
     const navigate=useNavigate();
-    const {setCaptain}=useContext(UserContext);
+    const {setCaptain,isLoading,setIsLoading}=useContext(UserContext);
   
     const handleRegister=async(e)=>{
            e.preventDefault();
@@ -38,19 +39,23 @@ const CaptainSignup = () => {
                 plate:vehiclePlate
               }
            }
-           console.log(newCaptain);
+           
            
            try {
+            setIsLoading(true);
             const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/register`,newCaptain);
             if(response.status==200){
+            
               const data=response.data;
               toast.success(data.message);
               navigate('/home');
               setCaptain(data.captain);
               localStorage.setItem('token',data.token);
             }
+            setIsLoading(false);
            } catch (error) {
-            toast.error(error.response.data.message)
+            toast.error(error.response.data.message);
+            setIsLoading(false);
             
            }
          
@@ -90,7 +95,7 @@ const CaptainSignup = () => {
           </div>
           <div className='flex flex-col gap-2 w-[40%]'>
             <h2 className='text-lg font-medium text-white'>Vehicle</h2>
-            <select  className='px-2 py-1 text-black bg-white border border-black rounded-md' onChange={(e)=>setVehicleType(e.target.value)} value={vehicleType}>
+            <select  className='px-2 py-1 text-black bg-slate-100 border border-black rounded-md' onChange={(e)=>setVehicleType(e.target.value)} value={vehicleType} >
                 <option>Select</option>
                 <option value="car">Car</option>
                 <option value="bike">Bike</option>
@@ -117,7 +122,8 @@ const CaptainSignup = () => {
           </div>
        </div>
        <div className='flex flex-col mx-6 justify-between gap-2 mt-4 text-white '>
-        <button className='py-1 text-xl text-center bg-black rounded-md' type="submit">Register</button>
+        <button className='py-1 text-xl text-center bg-black rounded-md' type="submit">
+          {isLoading ?  <Loader width={40} height={40}/>:"Register"}</button>
       </div>
        <div className='text-white flex gap-3 justify-center mt-2 text-lg'>
         <h2>Already have an account? </h2>

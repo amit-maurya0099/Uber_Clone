@@ -4,7 +4,8 @@ import Lottie from 'react-lottie'
 import registerAnimation from "../Utils/RegisterAnimation.json";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import {UserContext} from "../context/UserContext.jsx"
+import {UserContext} from "../context/Context"
+import Loader from '../components/Loader';
 
 
 const UserSignup = () => {
@@ -23,10 +24,11 @@ const UserSignup = () => {
     const [firstname,setFirstname]=useState('');
     const [lastname,setLastName]=useState('');
     const [contact,setContact]=useState('');
+
     
   
   const navigate=useNavigate();
-   const {user,setUser}=useContext(UserContext);
+   const {user,setUser,isLoading,setIsLoading}=useContext(UserContext);
 
 
     const handleRegister=async(e)=>{
@@ -35,7 +37,7 @@ const UserSignup = () => {
         firstname,lastname,email,password,contact
       }
       try {
-       
+        setIsLoading(true)
         const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`,newUser);
         if(response.status ==200){
           toast.success("User Registered Successfully");
@@ -43,9 +45,11 @@ const UserSignup = () => {
           setUser(data.user);
           localStorage.setItem('token',data.token);
           navigate("/home");
+          setIsLoading(false)
         }
         } catch (error) {
           toast.error(error.response.data.message)
+          setIsLoading(false)
          
       } 
   
@@ -81,7 +85,8 @@ const UserSignup = () => {
       value={contact} onChange={(e)=>setContact(e.target.value)} ></input>
       </div>
       <div className='flex flex-col mx-6 justify-between gap-2 mt-6'>
-        <button className='py-1 text-lg text-center bg-black rounded-md' type="submit">Register</button>
+        <button className='py-1 text-lg text-center bg-black rounded-md' type="submit">
+          {isLoading ? <Loader width={50} height={50}/>:"Register"}</button>
       </div>
       <div className='text-white flex gap-3 justify-center mt-4'>
         <h2>Already have an account? </h2>

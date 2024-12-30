@@ -5,6 +5,8 @@ import landingAnimation from "../Utils/LandingAnimation1.json"
 import { FaArrowRight } from "react-icons/fa6";
 import {Link} from "react-router-dom"
 
+
+
 const Landing = () => {
     const defaultOptionLanding={
         autoplay:true,
@@ -18,6 +20,7 @@ const Landing = () => {
   return (
     <div className='h-screen bg-gradient-to-b from-[#60527a] to-black '>
      <Navbar/>
+   
      <div className='md:flex  justify-evenly items-center mt-10 w-full'>
       <div className='flex flex-col justify-center items-center text-white md:w-[600px] text-center'>
         <h2 className='text-3xl font-semibold '>Welcome to GlideGo!</h2>

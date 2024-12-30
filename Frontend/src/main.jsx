@@ -4,8 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
-
-import {UserProvider} from './context/UserContext.jsx'
+import { UserProvider } from './context/Context.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

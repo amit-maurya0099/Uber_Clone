@@ -2,9 +2,10 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import loginAnimation from "../Utils/LoginAnimation.json"
 import Lottie from 'react-lottie'
-import { UserContext } from '../context/UserContext'
+import { UserContext } from '../context/Context'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import axios from 'axios';
+import Loader from '../components/Loader';
 
 const Userlogin = () => {
   const defaultOptionLogin={
@@ -17,7 +18,7 @@ const Userlogin = () => {
 }
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
-  const {user,setUser}=useContext(UserContext);
+  const {user,setUser,isLoading,setIsLoading}=useContext(UserContext);
   const navigate=useNavigate();
   
   const handleLogin=async(e)=>{
@@ -28,6 +29,7 @@ const Userlogin = () => {
           return  toast.error('please fill all the details')
          }
          try {
+          setIsLoading(true);
           const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`,userData)
           if(response.status ==200){
             toast.success("User Logged in successfully");
@@ -35,11 +37,12 @@ const Userlogin = () => {
             setUser(data.user);
             localStorage.setItem('token',data.token)
             navigate("/home")
-            
+            setIsLoading(false);
           }
           
          } catch (error) {
           toast.error(error.response.data.message);
+          setIsLoading(false);
         
          }      
   }
@@ -62,7 +65,8 @@ const Userlogin = () => {
         value={password} onChange={(e)=>setPassword(e.target.value)} name="password"></input>
         </div>
         <div className='flex flex-col mx-6 justify-between gap-2 mt-6'>
-          <button className='py-1 text-lg text-center bg-black rounded-md' type="submit">Login</button>
+          <button className='py-1 text-lg text-center bg-black rounded-md' type="submit">
+            {isLoading ? <Loader width={40} height={40}/>:"Login"}</button>
         </div>
         <div className='text-white flex gap-3 justify-center mt-4'>
           <h2>New here? </h2>
