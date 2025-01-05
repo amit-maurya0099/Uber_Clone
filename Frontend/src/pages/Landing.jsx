@@ -18,7 +18,7 @@ const Landing = () => {
     }
 
   return (
-    <div className='h-screen bg-gradient-to-b from-[#60527a] to-black '>
+    <div className='h-screen overflow-hidden bg-gradient-to-b from-[#60527a]  to-black '>
      <Navbar/>
    
      <div className='md:flex  justify-evenly items-center mt-10 w-full'>
